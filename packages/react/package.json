@@ -1,0 +1,25 @@
+{
+  "name": "@promise-components/react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/promise-components/promise-components.git"
+  },
+  "homepage": "https://github.com/promise-components/promise-components/blob/main/packages/react/README.md",
+  "private": true,
+  "devDependencies": {
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "react": "^18",
+    "react-dom": "^18"
+  }
+}

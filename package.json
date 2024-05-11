@@ -1,0 +1,26 @@
+{
+  "name": "promise-components",
+  "version": "1.0.0",
+  "description": "Promise Components",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "rollup -c"
+  },
+  "workspaces": [
+    "./packages/*"
+  ],
+  "author": "shixianqin",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "rollup": "^4.17.2",
+    "rollup-plugin-dts": "^6.1.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11"
+  }
+}
