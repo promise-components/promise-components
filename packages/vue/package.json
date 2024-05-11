@@ -1,7 +1,7 @@
 {
   "name": "@promise-components/vue",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is the package to use PromiseComponent with Vue.",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -14,8 +14,7 @@
     "type": "git",
     "url": "https://github.com/promise-components/promise-components.git"
   },
-  "homepage": "https://github.com/promise-components/promise-components/blob/main/packages/vue/README.md",
-  "private": true,
+  "homepage": "https://github.com/promise-components/promise-components/tree/main/packages/vue",
   "devDependencies": {
     "vue": "^3"
   }
