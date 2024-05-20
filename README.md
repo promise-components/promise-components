@@ -1,7 +1,9 @@
 # Promise Components
 
-This is a Promise-based encapsulation of components designed to simplify the handling of asynchronous input and output
-of components.
+This is a Promise-based component encapsulation method. Designed to simplify the handling of asynchronous input and
+output of components. Its design goal is to implement the software engineering concept of `High-cohesion and Low-coupling`
+
+English | [简体中文](/README-zh.md)
 
 ## Features
 
@@ -52,12 +54,14 @@ interface PromiseComponentProps<Value> {
 
 /**
  * Create a custom public slot component
+ * If you have multiple root components on your page, and you want each application's Promise components to be rendered in its own context, then you need to use this method to create a separate shared render slot
  * @param appId
  */
 declare function createSharedSlot (appId: string): FunctionComponent<{}>;
 
 /**
  * Public slot of Promise components
+ * It needs to be used on the root component in order to be able to inherit the context of the application and to provide a default render location for the Promise components
  */
 declare const SharedSlot: FunctionComponent<{}>;
 
@@ -221,29 +225,25 @@ export function UserList () {
   /**
    * 🟢 Use the component and pass in the parameters (edit mode)
    */
-  async function handleEdit (item: UserItem, editIndex: number) {
-    const newUser = await AddUser.render({
-      user: item,
+  async function handleEdit (editIndex: number) {
+    const modifiedUser = await AddUser.render({
+      user: userList[editIndex],
     })
 
-    setUserList((prevUserList) => {
-      return prevUserList.map((userItem, index) => {
-        return index === editIndex ? newUser : userItem
+    setUserList((prevList) => {
+      return prevList.map((item, index) => {
+        return index === editIndex ? modifiedUser : item
       })
     })
   }
 
   return (
     <>
-      <h1>User List</h1>
-
       <ul>{
         userList.map((item, index) => (
-          <li key={index}>
-            <div>
-              <button onClick={() => handleEdit(item, index)}>Edit</button>
-              <span>Name: {item.name}, Age: {item.age}</span>
-            </div>
+          <li key={index.name}>
+            <span>Name: {item.name}, Age: {item.age}</span>
+            <button onClick={() => handleEdit(index)}>Edit</button>
           </li>
         ))
       }</ul>
