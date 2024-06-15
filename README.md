@@ -1,7 +1,8 @@
 # Promise Components
 
 This is a Promise-based component encapsulation method. Designed to simplify the handling of asynchronous input and
-output of components. Its design goal is to implement the software engineering concept of `High-cohesion and Low-coupling`
+output of components. Its design goal is to implement the software engineering concept
+of `High-cohesion and Low-coupling`
 
 English | [简体中文](/README-zh.md)
 
@@ -37,147 +38,88 @@ effect of burning. This feature is ideal for temporary and one-off scenarios, wh
 + [@promise-components/react](./packages/react)
 + [@promise-components/vue](./packages/vue)
 
-## Interface (react)
+## Example (React)
 
-```ts
-import { FunctionComponent } from 'react';
-
-/**
- * The basic props of the PromiseComponent
- * @property resolve Promise Operation Success Callback (Resolved)
- * @property reject Promise Operation Failure Callback (Rejected)
- */
-interface PromiseComponentProps<Value> {
-  resolve: (value: Value) => void;
-  reject: (reason?: any) => void;
-}
-
-/**
- * Create a custom public slot component
- * If you have multiple root components on your page, and you want each application's Promise components to be rendered in its own context, then you need to use this method to create a separate shared render slot
- * @param appId
- */
-declare function createSharedSlot (appId: string): FunctionComponent<{}>;
-
-/**
- * Public slot of Promise components
- * It needs to be used on the root component in order to be able to inherit the context of the application and to provide a default render location for the Promise components
- */
-declare const SharedSlot: FunctionComponent<{}>;
-
-/**
- * Promise component constructor
- */
-declare class PromiseComponent<Props extends PromiseComponentProps<any>> {
-
-  /**
-   * Custom slot for current component
-   */
-  Slot: FunctionComponent;
-
-  /**
-   * Original component
-   */
-  Component: FunctionComponent<Props>;
-
-  constructor (Component: FunctionComponent<Props>);
-
-  /**
-   * Clone a new Promise component instance
-   * When you want to use the same existing Promise component in different places, you need to clone a new instance to avoid state pollution
-   */
-  clone (): PromiseComponent<Props>;
-
-  /**
-   * promise rendering
-   * @param props component parameters
-   */
-  render (props?: Omit<Props, keyof PromiseComponentProps<any>>): Promise<Parameters<Props["resolve"]>[0]>;
-}
-
-export {
-  PromiseComponent,
-  type PromiseComponentProps,
-  SharedSlot,
-  createSharedSlot
-};
-```
-
-## Example
-
-Let's make a list of users and include the ability to add and edit user information using dialog interactions.
+Let's implement a user list and include the ability to interactively add and edit user information using a dialog box.
 
 ### Initialization
 
-You need to use the shared render slot of the Promise components in the root component
+You need to use the shared rendering slot of the Promise component in the root component, which will provide a default
+rendering location for the Promise components of the entire application and inheritance of the application context (such
+as: store, theme, i18n...).
 
 ```tsx
-// main.tsx
+// App.tsx
 
-import ReactDOM from 'react-dom/client'
 import { SharedSlot } from '@promise-components/react'
-import App from './App.tsx'
 
-ReactDOM.createRoot(document.getElementById('app')!).render(
-  <React.StrictMode>
-    <App/>
+function App () {
+  return (
+    <div>
+      ...
 
-    {
-      /** 🟥 Promise components shared render slot (Required) */
       <SharedSlot/>
-    }
-  </React.StrictMode>,
-)
+    </div>
+  )
+}
+
+export default App
 ```
 
-### Define the Promise component
+### Defining a Promise Component
 
 ```tsx
 // add-user.tsx
 
+import { PromiseComponent, PromiseComponentProps } from '@promise-components/react'
 import { FormEvent, useState } from 'react'
-import { PromiseComponent, PromiseComponentsProps } from '@promise-components/react'
 
-export interface UserItem {
+interface UserItem {
   name: string
   age: number
+  id: number
 }
 
 /**
- * 🔴 1. The props parameter must inherit from the PromiseComponentsProps type
+ * 🔴 The Props parameter must inherit from PromiseComponentsProps
  */
-interface Props extends PromiseComponentsProps<UserItem> {
-  user?: UserItem // Passing in the user parameter is considered to be the edit mode
+interface Props extends PromiseComponentProps<UserItem> {
+  user?: UserItem
 }
 
 /**
- * 🔴 2. Create a PromiseComponent instance
+ * 🔴 Create a PromiseComponent instance
  */
 export const AddUser = new PromiseComponent((props: Props) => {
-  const [formData, setFormData] = useState<UserItem>({
-    name: '',
-    age: 0,
-    ...props.user, // If it's an edit, the default value is populated
+  const [formData, setFormData] = useState(() => {
+    return {
+      name: '',
+      age: 0,
+      id: Math.random(),
+      ...props.user, // If editing, fill in the default value
+    }
   })
-
-  function handleInput (key: keyof UserItem, evt: FormEvent) {
-    setFormData({
-      ...formData,
-      [key]: (evt.target as HTMLInputElement).value,
-    })
-  }
 
   function handleSubmit () {
     if (!formData.name) return alert('Please enter `Name`')
     if (!formData.age) return alert('Please enter `Age`')
 
-    // 🔴 3. Call resolve callback
+    // 🔴 Call resolve callback
     props.resolve(formData)
   }
 
   function handleCancel () {
-    // 🔴 4. Call reject callback
+    // 🔴 Call reject callback
     props.reject()
+  }
+
+  function handleInput (key: keyof UserItem) {
+    return (evt: FormEvent) => {
+      setFormData({
+        ...formData,
+        [key]: evt.target.value
+      })
+    }
   }
 
   return (
@@ -185,12 +127,12 @@ export const AddUser = new PromiseComponent((props: Props) => {
       <form>
         <p>
           <span>Name: </span>
-          <input value={formData.name} onInput={(evt) => handleInput('name', evt)} type="text"/>
+          <input value={formData.name} onInput={handleInput('name')} type="text"/>
         </p>
 
         <p>
           <span>Age: </span>
-          <input value={formData.age} onInput={(evt) => handleInput('age', evt)} type="number" min={0}/>
+          <input value={formData.age} onInput={handleInput('age')} type="number" min={0}/>
         </p>
       </form>
 
@@ -203,29 +145,36 @@ export const AddUser = new PromiseComponent((props: Props) => {
 })
 ```
 
-### Use the Promise component
+### Using the Promise component
 
 ```tsx
 // user-list.tsx
 
 import { useState } from 'react'
-import { AddUser, UserItem } from './add-user.tsx'
+import { AddUser } from './add-user.tsx'
+
+interface UserItem {
+  name: string
+  age: number
+  id: number
+}
 
 export function UserList () {
   const [userList, setUserList] = useState<UserItem[]>([])
 
-  /**
-   * 🟢 Use the component
-   */
   async function handleAdd () {
+    /**
+     * 🔴 Using component
+     */
     const newUser = await AddUser.render()
-    setUserList([...userList, newUser])
+
+    setUserList((prevList) => [...prevList, newUser])
   }
 
-  /**
-   * 🟢 Use the component and pass in the parameters (edit mode)
-   */
   async function handleEdit (editIndex: number) {
+    /**
+     * 🔴 Using component and providing parameters (Edit mode)
+     */
     const modifiedUser = await AddUser.render({
       user: userList[editIndex],
     })
@@ -238,10 +187,10 @@ export function UserList () {
   }
 
   return (
-    <>
+    <div>
       <ul>{
         userList.map((item, index) => (
-          <li key={index.name}>
+          <li key={item.id}>
             <span>Name: {item.name}, Age: {item.age}</span>
             <button onClick={() => handleEdit(index)}>Edit</button>
           </li>
@@ -249,17 +198,14 @@ export function UserList () {
       }</ul>
 
       <button onClick={handleAdd}>Add</button>
-
-      {
-        /** 🟢 Use component's custom render slot (Optional) */
-        <AddUser.Slot/>
-      }
-    </>
+    </div>
   )
 }
 ```
 
-Well, we've finished developing a user list feature. Based on the above examples, we can get some conclusions:
+Well, we have happily completed the development of the user list function based on the Promise component.
+
+Based on the above example, we can see some characteristics:
 
 + There is no `ON/OFF` variable for modal
 + There is no event listener for modal `Cancel/Confirm`

@@ -1,24 +1,23 @@
 # @promise-components/vue
 
-This is the package to use PromiseComponent with Vue.
+在 Vue 中使用 Promise 组件。
 
-English | [简体中文](./README-zh.md)
+[English](./README.md) | 简体中文
 
-## Installation
+## 安装
 
 ```shell
 npm i @promise-components/vue
 ```
 
-## Example
+## 示例
 
-Let's implement a user list and include the ability to interactively add and edit user information using a dialog box.
+让我们来实现一个用户列表，并包含使用对话框交互添加和编辑用户信息的功能。
 
-### Initialization
+### 初始化
 
-You need to use the shared rendering slot of the Promise component in the root component, which will provide a default
-rendering location for the Promise components of the entire application and inheritance of the application context (such
-as: store, theme, i18n...).
+您需要在根组件中使用 Promise 组件的共享渲染插槽，它将为整个应用的 Promise
+组件提供一个默认的渲染位置，和应用上下文的继承（比如：store、theme、i18n...）。
 
 ```vue
 <!-- App.vue -->
@@ -36,7 +35,7 @@ as: store, theme, i18n...).
 </template>
 ```
 
-### Defining a Promise Component
+### 定义 Promise 组件
 
 ```vue
 <!-- add-user.vue -->
@@ -52,7 +51,7 @@ as: store, theme, i18n...).
   }
 
   /**
-   * 🔴 The Props parameter must inherit from PromiseComponentsProps
+   * 🔴 Props 参数必须继承自 PromiseComponentsProps
    */
   interface Props extends PromiseComponentProps<UserItem> {
     user?: UserItem
@@ -63,20 +62,20 @@ as: store, theme, i18n...).
   const formData = reactive<UserItem>({
     name: '',
     age: 0,
-    id: Math.random(),
-    ...props.user, // If editing, fill in the default value
+    id: Math.rancom(),
+    ...props.user, // 如果是编辑，则填充默认值
   })
 
   function handleSubmit () {
     if (!formData.name) return alert('Please enter `Name`')
     if (!formData.age) return alert('Please enter `Age`')
 
-    // 🔴 Call resolve callback
+    // 🔴 调用成功回调
     props.resolve(formData)
   }
 
   function handleCancel () {
-    // 🔴 Call reject callback
+    // 🔴 调用失败回调
     props.reject()
   }
 </script>
@@ -103,8 +102,8 @@ as: store, theme, i18n...).
 </template>
 ```
 
-Since the Promise component instance cannot be exported directly in the `.vue` file, an additional `.ts` file is
-required to create the instance.
+由于在 `.vue` 文件中不能直接导出一个 Promise 组件实例，所以需要增加一个单独的 ts
+文件来创建实例。
 
 ```ts
 // add-user.promise.ts
@@ -115,12 +114,12 @@ import Component from './add-user.vue'
 export const AddUser = new PromiseComponent(Component)
 ```
 
-File name suggestions:
+文件名建议：
 
-+ Main: `index.ts`
-+ Named: `[name].promise.ts`
++ 主要的：`index.ts`
++ 具名的：`[name].promise.ts`
 
-### Using the Promise component
+### 使用 Promise 组件
 
 ```vue
 <!-- user-list.vue -->
@@ -139,7 +138,7 @@ File name suggestions:
 
   async function handleAdd () {
     /**
-     * 🔴 Using component
+     * 🔴 使用组件
      */
     const newUser = await AddUser.render()
 
@@ -150,7 +149,7 @@ File name suggestions:
     const target = userList.value[editIndex]
 
     /**
-     * 🔴 Using component and providing parameters (Edit mode)
+     * 🔴 使用组件并传入参数（编辑模式）
      */
     const modifiedUser = await AddUser.render({
       user: target,
@@ -174,14 +173,13 @@ File name suggestions:
 </template>
 ```
 
-Well, we have happily completed the development of the user list function based on the Promise component.
+好了，我们已经基于 Promise 组件愉快的完成了用户列表功能的开发。
 
-## Custom Render Slots
+## 自定义渲染插槽
 
-### Shared slot
+### 共享插槽
 
-When your page has multiple root components at the same time, and you want the Promise component under each application
-to be rendered in its own context, you need to create a separate shared rendering slot.
+当你的页面同时存在多个根组件，并且希望每个应用下的 Promise 组件渲染在自己的上下文中，那么你就需要创建一个独立的共享渲染插槽。
 
 ```vue
 <!-- App.vue -->
@@ -201,9 +199,9 @@ to be rendered in its own context, you need to create a separate shared renderin
 </template>
 ```
 
-### Component slot
+### 组件插槽
 
-If you want to render a Promise component in a specific location, you can use the custom slot of the Promise component.
+如果希望将某个 Promise 组件渲染在特定的位置，这时候可以使用 Promise 组件的自定义插槽
 
 ```vue
 <!-- user-list.vue -->
@@ -224,12 +222,12 @@ If you want to render a Promise component in a specific location, you can use th
 ## Interface
 
 ```ts
-import { ComponentOptions, Component } from 'vue'
+import { Component, ComponentOptions } from 'vue'
 
 /**
- * The basic props of the PromiseComponent
- * @property resolve Promise Operation Success Callback (Resolved)
- * @property reject Promise Operation Failure Callback (Rejected)
+ * Promise 组件的基本参数
+ * @property resolve Promise 的成功回调 (Resolved)
+ * @property reject Promise 的失败回调 (Rejected)
  */
 interface PromiseComponentProps<Value> {
   resolve: (value: Value) => void;
@@ -237,42 +235,44 @@ interface PromiseComponentProps<Value> {
 }
 
 /**
- * Create a custom public slot component
+ * 创建自定义共享插槽的方法
+ * 当你的页面同时存在多个根组件，并且希望每个应用下的 Promise 组件渲染在自己的上下文中，那么你就需要使用这个方法创建一个独立的共享渲染插槽
  * @param appId
  */
 declare function createSharedSlot (appId: string): ComponentOptions;
 
 /**
- * Public slot of Promise components
+ * Promise 组件的共享渲染插槽
+ * 它需要在根组件上使用，是为了能够继承应用的上下文，并且给 Promise 组件提供一个默认渲染位置
  */
 declare const SharedSlot: ComponentOptions
 
 /**
- * Promise component constructor
+ * Promise 组件实例构造器
  */
 declare class PromiseComponent<Props extends PromiseComponentProps<any>> {
 
   /**
-   * Custom slots for Promise component
+   * 当前组件的自定义插槽
    */
   Slot: ComponentOptions
 
   /**
-   * Original component
+   * 原始组件
    */
   Component: Component<Props>
 
   constructor (Component: Component<Props>);
 
   /**
-   * Clone a new Promise component instance
-   * When you want to use the same existing Promise component in different places, you need to clone a new instance to avoid state pollution
+   * 克隆一个新的 Promise 组件实例
+   * 当您想在不同的地方使用相同的现有 Promise 组件时，您需要克隆一个新实例以避免状态污染
    */
   clone (): PromiseComponent<Props>;
 
   /**
-   * promise rendering
-   * @param props component parameters
+   * Promise 渲染
+   * @param props 组件参数
    */
   render (props?: Omit<Props, keyof PromiseComponentProps<any>>): Promise<Parameters<Props['resolve']>[0]>;
 }

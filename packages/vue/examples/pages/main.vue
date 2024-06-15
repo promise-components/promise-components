@@ -1,18 +1,9 @@
 <script setup lang="ts">
-import DialogComponent from '../components/dialog-component.vue'
-import { PromiseComponent } from '@promise-components/vue/src'
-
-const dialog = new PromiseComponent(DialogComponent)
-
-function handleOpen () {
-  dialog.render().then(alert)
-}
+import UserList from '../components/user-list.vue'
 </script>
 
 <template>
   <div>
-    <button class="btn btn-success" @click="handleOpen">Open dialog</button>
-
-    <dialog.Slot></dialog.Slot>
+    <UserList/>
   </div>
 </template>

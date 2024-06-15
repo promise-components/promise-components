@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SharedSlot } from '@promise-components/vue/src'
+import { SharedSlot } from '@promise-components/vue'
 import Main from './pages/main.vue'
 </script>
 

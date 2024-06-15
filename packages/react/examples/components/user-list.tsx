@@ -1,54 +1,51 @@
 import { useState } from 'react'
-import { AddUser, UserItem } from './add-user.tsx'
+import { AddUser } from './add-user.tsx'
+
+interface UserItem {
+  name: string
+  age: number
+  id: number
+}
 
 export function UserList () {
   const [userList, setUserList] = useState<UserItem[]>([])
 
   async function handleAdd () {
+    /**
+     * 🔴 Using component
+     */
     const newUser = await AddUser.render()
 
-    setUserList([...userList, newUser])
+    setUserList((prevList) => [...prevList, newUser])
   }
 
-  async function handleEdit (userIndex: number) {
-    const newUser = await AddUser.render({
-      user: userList[userIndex]
+  async function handleEdit (editIndex: number) {
+    /**
+     * 🔴 Using component and providing parameters (Edit mode)
+     */
+    const modifiedUser = await AddUser.render({
+      user: userList[editIndex],
     })
 
-    setUserList((userList) => userList.map((user, index) => {
-      return index === userIndex ? newUser : user
-    }))
+    setUserList((prevList) => {
+      return prevList.map((item, index) => {
+        return index === editIndex ? modifiedUser : item
+      })
+    })
   }
 
   return (
-    <>
-      <h2>User List</h2>
+    <div>
+      <ul>{
+        userList.map((item, index) => (
+          <li key={item.id}>
+            <span>Name: {item.name}, Age: {item.age}</span>
+            <button onClick={() => handleEdit(index)}>Edit</button>
+          </li>
+        ))
+      }</ul>
 
-      <button className="btn btn-primary" onClick={handleAdd}>Add</button>
-
-      <table className="table">
-        <thead>
-        <tr>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Operation</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        {
-          userList.map((user, index) => (
-            <tr key={index}>
-              <td>{user.name}</td>
-              <td>{user.age}</td>
-              <td>
-                <button className="btn btn-light" onClick={() => handleEdit(index)}>Edit</button>
-              </td>
-            </tr>
-          ))
-        }
-        </tbody>
-      </table>
-    </>
+      <button onClick={handleAdd}>Add</button>
+    </div>
   )
 }
