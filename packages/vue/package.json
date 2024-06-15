@@ -1,6 +1,6 @@
 {
   "name": "@promise-components/vue",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is the package to use PromiseComponent with Vue.",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
