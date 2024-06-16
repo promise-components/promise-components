@@ -3,17 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <title>Promise Components</title>
+  <style>
+    .container {
+      display: flex;
+    }
+
+    .container > div {
+      border: 1px solid black;
+      width: 50%;
+      margin: 20px;
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
 
-<div>
-  <h1>React App</h1>
-  <div id="reactApp"></div>
-</div>
+<div class="container">
+  <div>
+    <h1>React App</h1>
+    <div id="reactApp"></div>
+  </div>
 
-<div>
-  <h1>Vue App</h1>
-  <div id="vueApp"></div>
+  <div>
+    <h1>Vue App</h1>
+    <div id="vueApp"></div>
+  </div>
 </div>
 
 <script type="module" src="./packages/react/examples/index.ts"></script>

@@ -51,6 +51,8 @@ export const AddUser = new PromiseComponent((props: Props) => {
 
   return (
     <dialog open>
+      <h2>React dialog</h2>
+
       <form>
         <p>
           <span>Name: </span>

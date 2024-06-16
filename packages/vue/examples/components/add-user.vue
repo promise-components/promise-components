@@ -40,6 +40,8 @@ function handleCancel () {
 
 <template>
   <dialog open>
+    <h2>Vue dialog</h2>
+
     <form>
       <p>
         <span>Name: </span>
