@@ -179,15 +179,33 @@ export const AddUser = new PromiseComponent(Component)
 
 ### 共享插槽
 
-当你的页面同时存在多个根组件，并且希望每个应用下的 Promise 组件渲染在自己的上下文中，那么你就需要创建一个独立的共享渲染插槽。
+当你的页面同时存在多个根组件（比如微服务），并且希望每个应用下的 Promise 组件渲染在自己的上下文中，那么你就需要创建一个独立的共享渲染插槽。
 
 ```vue
-<!-- App.vue -->
+<!-- project-1/App.vue -->
 
 <script setup lang="ts">
   import { createSharedSlot } from '@promise-components/vue'
 
-  const SharedSlot = createSharedSlot('MyApp')
+  const SharedSlot = createSharedSlot('MyApp_1')
+</script>
+
+<template>
+  <div>
+    ...
+
+    <SharedSlot/>
+  </div>
+</template>
+```
+
+```vue
+<!-- project-2/App.vue -->
+
+<script setup lang="ts">
+  import { createSharedSlot } from '@promise-components/vue'
+
+  const SharedSlot = createSharedSlot('MyApp_2')
 </script>
 
 <template>

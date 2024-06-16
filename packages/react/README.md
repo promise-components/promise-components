@@ -181,15 +181,35 @@ Well, we have happily completed the development of the user list function based 
 
 ### Shared slot
 
-When your page has multiple root components at the same time, and you want the Promise component under each application
+When your page has multiple root components at the same time (Like microservices), and you want the Promise component under each application
 to be rendered in its own context, you need to create a separate shared rendering slot.
 
 ```tsx
-// App.tsx
+// project-1/App.tsx
 
 import { createSharedSlot } from '@promise-components/react'
 
-const SharedSlot = createSharedSlot('MyApp')
+const SharedSlot = createSharedSlot('MyApp_1')
+
+function App () {
+  return (
+    <div>
+      ...
+
+      <SharedSlot/>
+    </div>
+  )
+}
+
+export default App
+```
+
+```tsx
+// project-2/App.tsx
+
+import { createSharedSlot } from '@promise-components/react'
+
+const SharedSlot = createSharedSlot('MyApp_2')
 
 function App () {
   return (

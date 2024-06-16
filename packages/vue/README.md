@@ -180,16 +180,34 @@ Well, we have happily completed the development of the user list function based 
 
 ### Shared slot
 
-When your page has multiple root components at the same time, and you want the Promise component under each application
+When your page has multiple root components at the same time (Like microservices), and you want the Promise component under each application
 to be rendered in its own context, you need to create a separate shared rendering slot.
 
 ```vue
-<!-- App.vue -->
+<!-- project-1/App.vue -->
 
 <script setup lang="ts">
   import { createSharedSlot } from '@promise-components/vue'
 
-  const SharedSlot = createSharedSlot('MyApp')
+  const SharedSlot = createSharedSlot('MyApp_1')
+</script>
+
+<template>
+  <div>
+    ...
+
+    <SharedSlot/>
+  </div>
+</template>
+```
+
+```vue
+<!-- project-2/App.vue -->
+
+<script setup lang="ts">
+  import { createSharedSlot } from '@promise-components/vue'
+
+  const SharedSlot = createSharedSlot('MyApp_2')
 </script>
 
 <template>

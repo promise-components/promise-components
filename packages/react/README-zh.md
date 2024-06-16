@@ -174,14 +174,34 @@ export function UserList () {
 
 ### 共享插槽
 
-当你的页面同时存在多个根组件，并且希望每个应用下的 Promise 组件渲染在自己的上下文中，那么你就需要创建一个独立的共享渲染插槽。
+当你的页面同时存在多个根组件（比如微服务），并且希望每个应用下的 Promise 组件渲染在自己的上下文中，那么你就需要创建一个独立的共享渲染插槽。
 
 ```tsx
-// App.tsx
+// project-1/App.tsx
 
 import { createSharedSlot } from '@promise-components/react'
 
-const SharedSlot = createSharedSlot('MyApp')
+const SharedSlot = createSharedSlot('MyApp_1')
+
+function App () {
+  return (
+    <div>
+      ...
+
+      <SharedSlot/>
+    </div>
+  )
+}
+
+export default App
+```
+
+```tsx
+// project-2/App.tsx
+
+import { createSharedSlot } from '@promise-components/react'
+
+const SharedSlot = createSharedSlot('MyApp_2')
 
 function App () {
   return (
