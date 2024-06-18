@@ -42,7 +42,7 @@ as: store, theme, i18n...).
 <!-- add-user.vue -->
 
 <script setup lang="ts">
-  import { PromiseComponentProps } from '@promise-components/vue'
+  import { PromiseResolvers } from '@promise-components/vue'
   import { reactive } from 'vue'
 
   interface UserItem {
@@ -52,9 +52,9 @@ as: store, theme, i18n...).
   }
 
   /**
-   * 🔴 The Props parameter must inherit from PromiseComponentsProps
+   * 🔴 The Props parameter must inherit from PromiseResolvers
    */
-  interface Props extends PromiseComponentProps<UserItem> {
+  interface Props extends PromiseResolvers<UserItem> {
     user?: UserItem
   }
 
@@ -249,7 +249,7 @@ import { ComponentOptions, Component } from 'vue'
  * @property resolve Promise Operation Success Callback (Resolved)
  * @property reject Promise Operation Failure Callback (Rejected)
  */
-interface PromiseComponentProps<Value> {
+interface PromiseResolvers<Value> {
   resolve: (value: Value) => void;
   reject: (reason?: any) => void;
 }
@@ -268,19 +268,15 @@ declare const SharedSlot: ComponentOptions
 /**
  * Promise component constructor
  */
-declare class PromiseComponent<Props extends PromiseComponentProps<any>> {
+declare class PromiseComponent<Props extends PromiseResolvers<any>> {
+
+  constructor (public Component: Component<Props>);
 
   /**
-   * Custom slots for Promise component
+   * promise rendering
+   * @param props component parameters
    */
-  Slot: ComponentOptions
-
-  /**
-   * Original component
-   */
-  Component: Component<Props>
-
-  constructor (Component: Component<Props>);
+  render (props?: Omit<Props, keyof PromiseResolvers<any>>): Promise<Parameters<Props['resolve']>[0]>;
 
   /**
    * Clone a new Promise component instance
@@ -289,15 +285,14 @@ declare class PromiseComponent<Props extends PromiseComponentProps<any>> {
   clone (): PromiseComponent<Props>;
 
   /**
-   * promise rendering
-   * @param props component parameters
+   * Custom slot for Promise component
    */
-  render (props?: Omit<Props, keyof PromiseComponentProps<any>>): Promise<Parameters<Props['resolve']>[0]>;
+  Slot: ComponentOptions
 }
 
 export {
   PromiseComponent,
-  type PromiseComponentProps,
+  type PromiseResolvers,
   SharedSlot,
   createSharedSlot
 }

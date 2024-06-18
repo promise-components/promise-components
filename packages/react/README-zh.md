@@ -42,7 +42,7 @@ export default App
 ```tsx
 // add-user.tsx
 
-import { PromiseComponent, PromiseComponentProps } from '@promise-components/react'
+import { PromiseComponent, PromiseResolvers } from '@promise-components/react'
 import { useState } from 'react'
 
 export interface UserItem {
@@ -52,9 +52,9 @@ export interface UserItem {
 }
 
 /**
- * 🔴 Props 参数必须继承自 PromiseComponentsProps
+ * 🔴 Props 参数必须继承自 PromiseResolvers
  */
-interface Props extends PromiseComponentProps<UserItem> {
+interface Props extends PromiseResolvers<UserItem> {
   user?: UserItem
 }
 
@@ -246,7 +246,7 @@ import { FunctionComponent } from 'react'
  * @property resolve Promise 的成功回调 (Resolved)
  * @property reject Promise 的失败回调 (Rejected)
  */
-interface PromiseComponentProps<Value> {
+interface PromiseResolvers<Value> {
   resolve: (value: Value) => void;
   reject: (reason?: any) => void;
 }
@@ -267,19 +267,15 @@ declare const SharedSlot: FunctionComponent<{}>
 /**
  * Promise 组件实例构造器
  */
-declare class PromiseComponent<Props extends PromiseComponentProps<any>> {
+declare class PromiseComponent<Props extends PromiseResolvers<any>> {
+
+  constructor (public Component: FunctionComponent<Props>);
 
   /**
-   * 当前组件的自定义插槽
+   * Promise 渲染
+   * @param props 组件参数
    */
-  Slot: FunctionComponent
-
-  /**
-   * 原始组件
-   */
-  Component: FunctionComponent<Props>
-
-  constructor (Component: FunctionComponent<Props>);
+  render (props?: Omit<Props, keyof PromiseResolvers<any>>): Promise<Parameters<Props['resolve']>[0]>;
 
   /**
    * 克隆一个新的 Promise 组件实例
@@ -288,15 +284,14 @@ declare class PromiseComponent<Props extends PromiseComponentProps<any>> {
   clone (): PromiseComponent<Props>;
 
   /**
-   * Promise 渲染
-   * @param props 组件参数
+   * 当前组件的自定义插槽
    */
-  render (props?: Omit<Props, keyof PromiseComponentProps<any>>): Promise<Parameters<Props['resolve']>[0]>;
+  Slot: FunctionComponent
 }
 
 export {
   PromiseComponent,
-  type PromiseComponentProps,
+  type PromiseResolvers,
   SharedSlot,
   createSharedSlot
 }

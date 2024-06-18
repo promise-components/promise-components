@@ -71,7 +71,7 @@ export default App
 ```tsx
 // add-user.tsx
 
-import { PromiseComponent, PromiseComponentProps } from '@promise-components/react'
+import { PromiseComponent, PromiseResolvers } from '@promise-components/react'
 import { FormEvent, useState } from 'react'
 
 interface UserItem {
@@ -81,9 +81,9 @@ interface UserItem {
 }
 
 /**
- * 🔴 The Props parameter must inherit from PromiseComponentsProps
+ * 🔴 The Props parameter must inherit from PromiseResolvers
  */
-interface Props extends PromiseComponentProps<UserItem> {
+interface Props extends PromiseResolvers<UserItem> {
   user?: UserItem
 }
 

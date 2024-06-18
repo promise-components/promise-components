@@ -59,7 +59,7 @@ export default App
 ```tsx
 // add-user.tsx
 
-import { PromiseComponent, PromiseComponentProps } from '@promise-components/react'
+import { PromiseComponent, PromiseResolvers } from '@promise-components/react'
 import { useState } from 'react'
 
 export interface UserItem {
@@ -69,9 +69,9 @@ export interface UserItem {
 }
 
 /**
- * 🔴 Props 参数必须继承自 PromiseComponentsProps
+ * 🔴 Props 参数必须继承自 PromiseResolvers
  */
-interface Props extends PromiseComponentProps<UserItem> {
+interface Props extends PromiseResolvers<UserItem> {
   user?: UserItem
 }
 

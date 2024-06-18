@@ -1,4 +1,4 @@
-import { PromiseComponent, PromiseComponentProps } from '@promise-components/react'
+import { PromiseComponent, PromiseResolvers } from '@promise-components/react'
 import { FormEvent, useState } from 'react'
 
 export interface UserItem {
@@ -8,9 +8,9 @@ export interface UserItem {
 }
 
 /**
- * 🔴 The Props parameter must inherit from PromiseComponentsProps
+ * 🔴 The Props parameter must inherit from PromiseResolvers
  */
-interface Props extends PromiseComponentProps<UserItem> {
+interface Props extends PromiseResolvers<UserItem> {
   user?: UserItem
 }
 
@@ -41,10 +41,10 @@ export const AddUser = new PromiseComponent((props: Props) => {
   }
 
   function handleInput (key: keyof UserItem) {
-    return (evt: FormEvent) => {
+    return (evt: FormEvent<HTMLInputElement>) => {
       setFormData({
         ...formData,
-        [key]: evt.target.value
+        [key]: evt.currentTarget.value
       })
     }
   }

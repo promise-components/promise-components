@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PromiseComponentProps } from '@promise-components/vue'
+import { PromiseResolvers } from '@promise-components/vue'
 import { reactive } from 'vue'
 
 interface UserItem {
@@ -9,9 +9,9 @@ interface UserItem {
 }
 
 /**
- * 🔴 The Props parameter must inherit from PromiseComponentsProps
+ * 🔴 The Props parameter must inherit from PromiseResolvers
  */
-interface Props extends PromiseComponentProps<UserItem> {
+interface Props extends PromiseResolvers<UserItem> {
   user?: UserItem
 }
 

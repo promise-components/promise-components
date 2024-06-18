@@ -43,7 +43,7 @@ export default App
 ```tsx
 // add-user.tsx
 
-import { PromiseComponent, PromiseComponentProps } from '@promise-components/react'
+import { PromiseComponent, PromiseResolvers } from '@promise-components/react'
 import { FormEvent, useState } from 'react'
 
 interface UserItem {
@@ -53,9 +53,9 @@ interface UserItem {
 }
 
 /**
- * 🔴 The Props parameter must inherit from PromiseComponentsProps
+ * 🔴 The Props parameter must inherit from PromiseResolvers
  */
-interface Props extends PromiseComponentProps<UserItem> {
+interface Props extends PromiseResolvers<UserItem> {
   user?: UserItem
 }
 
@@ -254,7 +254,7 @@ import { FunctionComponent } from 'react'
  * @property resolve Promise Operation Success Callback (Resolved)
  * @property reject Promise Operation Failure Callback (Rejected)
  */
-interface PromiseComponentProps<Value> {
+interface PromiseResolvers<Value> {
   resolve: (value: Value) => void;
   reject: (reason?: any) => void;
 }
@@ -273,19 +273,15 @@ declare const SharedSlot: FunctionComponent<{}>
 /**
  * Promise component constructor
  */
-declare class PromiseComponent<Props extends PromiseComponentProps<any>> {
+declare class PromiseComponent<Props extends PromiseResolvers<any>> {
+
+  constructor (public Component: FunctionComponent<Props>);
 
   /**
-   * Custom slots for Promise component
+   * promise rendering
+   * @param props component parameters
    */
-  Slot: FunctionComponent
-
-  /**
-   * Original component
-   */
-  Component: FunctionComponent<Props>
-
-  constructor (Component: FunctionComponent<Props>);
+  render (props?: Omit<Props, keyof PromiseResolvers<any>>): Promise<Parameters<Props['resolve']>[0]>;
 
   /**
    * Clone a new Promise component instance
@@ -294,15 +290,14 @@ declare class PromiseComponent<Props extends PromiseComponentProps<any>> {
   clone (): PromiseComponent<Props>;
 
   /**
-   * promise rendering
-   * @param props component parameters
+   * Custom slots for Promise component
    */
-  render (props?: Omit<Props, keyof PromiseComponentProps<any>>): Promise<Parameters<Props['resolve']>[0]>;
+  Slot: FunctionComponent
 }
 
 export {
   PromiseComponent,
-  type PromiseComponentProps,
+  type PromiseResolvers,
   SharedSlot,
   createSharedSlot
 }
