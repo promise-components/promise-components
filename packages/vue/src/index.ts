@@ -13,7 +13,7 @@ import {
  * @property resolve Promise Operation Success Callback (Resolved)
  * @property reject Promise Operation Failure Callback (Rejected)
  */
-export interface PromiseComponentProps<Value> {
+export interface PromiseResolvers<Value> {
   resolve: (value: Value) => void,
   reject: (reason?: any) => void
 }
@@ -111,7 +111,7 @@ export const SharedSlot = createSharedSlot('')
 /**
  * Promise component constructor
  */
-export class PromiseComponent<Props extends PromiseComponentProps<any>> {
+export class PromiseComponent<Props extends PromiseResolvers<any>> {
 
   /**
    * Dispatching of custom slots
@@ -149,7 +149,7 @@ export class PromiseComponent<Props extends PromiseComponentProps<any>> {
    * promise rendering
    * @param props component parameters
    */
-  render (props?: Omit<Props, keyof PromiseComponentProps<any> | keyof ComponentPublicInstance>) {
+  render (props?: Omit<Props, keyof PromiseResolvers<any> | keyof ComponentPublicInstance>) {
     // If the current instance does not have a `_dispatch` method, it means that no custom slot is used, and the component will be rendered to the public slot
     const dispatch = this._dispatch || SHARED.dispatch
 
