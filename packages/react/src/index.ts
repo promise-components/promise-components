@@ -107,38 +107,10 @@ export const SharedSlot = createSharedSlot('')
  * Promise component constructor
  */
 export class PromiseComponent<Props extends PromiseResolvers<any>> {
-
-  /**
-   * Dispatching of custom slots
-   * @private
-   */
+  private _slot: FunctionComponent | null = null
   private _dispatch: Dispatch | null = null
 
-  /**
-   * Custom slots for Promise component
-   */
-  Slot: FunctionComponent
-
-  /**
-   * Original component
-   */
-  Component: FunctionComponent<Props>
-
-  constructor (Component: FunctionComponent<Props>) {
-    this.Component = Component
-
-    this.Slot = createSlot(`${Component.name || 'PromiseComponent'}.Slot`, (dispatch) => {
-      this._dispatch = dispatch
-    })
-  }
-
-  /**
-   * Clone a new Promise component instance
-   * When you want to use the same existing Promise component in different places, you need to clone a new instance to avoid state pollution
-   */
-  clone () {
-    return new PromiseComponent<Props>(this.Component)
-  }
+  constructor (public Component: FunctionComponent<Props>) {}
 
   /**
    * promise rendering
@@ -170,5 +142,22 @@ export class PromiseComponent<Props extends PromiseResolvers<any>> {
     })
 
     return promise
+  }
+
+  /**
+   * Clone a new Promise component instance
+   * When you want to use the same existing Promise component in different places, you need to clone a new instance to avoid state pollution
+   */
+  clone () {
+    return new PromiseComponent<Props>(this.Component)
+  }
+
+  /**
+   * Custom slot for Promise component
+   */
+  get Slot (): FunctionComponent {
+    return this._slot || (this._slot = createSlot(`${this.Component.name || 'PromiseComponent'}.Slot`, (dispatch) => {
+      this._dispatch = dispatch
+    }))
   }
 }
