@@ -114,10 +114,10 @@ export const AddUser = new PromiseComponent((props: Props) => {
   }
 
   function handleInput (key: keyof UserItem) {
-    return (evt: FormEvent) => {
+    return (evt: FormEvent<HTMLInputElement>) => {
       setFormData({
         ...formData,
-        [key]: evt.target.value
+        [key]: evt.currentTarget.value
       })
     }
   }
