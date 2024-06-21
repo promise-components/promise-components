@@ -43,7 +43,7 @@ export default App
 // add-user.tsx
 
 import { PromiseComponent, PromiseResolvers } from '@promise-components/react'
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 export interface UserItem {
   name: string
@@ -85,10 +85,10 @@ export const AddUser = new PromiseComponent((props: Props) => {
   }
 
   function handleInput (key: keyof UserItem) {
-    return (evt: InputEvent) => {
-      setFromData({
+    return (evt: FormEvent<HTMLInputElement>) => {
+      setFormData({
         ...formData,
-        [key]: evt.target.value
+        [key]: evt.currentTarget.value
       })
     }
   }
