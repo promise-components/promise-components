@@ -91,7 +91,7 @@ as: store, theme, i18n...).
 
       <p>
         <span>Age: </span>
-        <input v-model="formData.age" type="number" min={0}/>
+        <input v-model="formData.age" type="number"/>
       </p>
     </form>
 
