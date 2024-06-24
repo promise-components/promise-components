@@ -117,11 +117,11 @@ export class PromiseComponent<Props extends PromiseResolvers<any>> {
    * @param props component parameters
    */
   render (props?: Omit<Props, keyof PromiseResolvers<any>>) {
+    let component: ReactElement
+
     // If the current instance does not have a `_dispatch` method,
     // it means that no custom slot is used, and the component will be rendered to the public slot
     const dispatch = this._dispatch || SHARED.dispatch
-
-    let component: ReactElement
 
     const promise = new Promise<Parameters<Props['resolve']>[0]>((resolve, reject) => {
       // Create a component instance
@@ -136,10 +136,12 @@ export class PromiseComponent<Props extends PromiseResolvers<any>> {
       dispatch((components) => [...components, component])
     })
 
-    // Destroy the component immediately after use
-    promise.finally(() => {
+    const destroy = () => {
       dispatch((components) => components.filter((item) => item !== component))
-    })
+    }
+
+    // Destroy the component immediately after use
+    promise.then(destroy, destroy)
 
     return promise
   }
