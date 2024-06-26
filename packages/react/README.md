@@ -4,7 +4,7 @@ This is the package to use PromiseComponent with React.
 
 English | [简体中文](./README-zh.md)
 
-## 安装
+## Installation
 
 ```shell
 npm i @promise-components/react
