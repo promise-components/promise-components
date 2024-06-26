@@ -254,8 +254,8 @@ import { FunctionComponent } from 'react'
  * @property resolve Promise Operation Success Callback (Resolved)
  * @property reject Promise Operation Failure Callback (Rejected)
  */
-interface PromiseResolvers<Value> {
-  resolve: (value: Value) => void;
+interface PromiseResolvers<T> {
+  resolve: (value: T) => void;
   reject: (reason?: any) => void;
 }
 
@@ -273,24 +273,24 @@ declare const SharedSlot: FunctionComponent<{}>
 /**
  * Promise component constructor
  */
-declare class PromiseComponent<Props extends PromiseResolvers<any>> {
+declare class PromiseComponent<T extends PromiseResolvers<any>, P = Omit<T, keyof PromiseResolvers<any>>, R = Parameters<T['resolve']>[0]> {
 
-  constructor (public Component: FunctionComponent<Props>);
+  constructor (public Component: FunctionComponent<T>);
 
   /**
    * promise rendering
-   * @param props component parameters
+   * @param props component props
    */
-  render (props?: Omit<Props, keyof PromiseResolvers<any>>): Promise<Parameters<Props['resolve']>[0]>;
+  render (props?: P): Promise<R>;
 
   /**
    * Clone a new Promise component instance
    * When you want to use the same existing Promise component in different places, you need to clone a new instance to avoid state pollution
    */
-  clone (): PromiseComponent<Props>;
+  clone (): PromiseComponent<T, P, R>;
 
   /**
-   * Custom slots for Promise component
+   * Custom slot for Promise component
    */
   Slot: FunctionComponent
 }

@@ -247,8 +247,8 @@ import { Component, ComponentOptions } from 'vue'
  * @property resolve Promise 的成功回调 (Resolved)
  * @property reject Promise 的失败回调 (Rejected)
  */
-interface PromiseResolvers<Value> {
-  resolve: (value: Value) => void;
+interface PromiseResolvers<T> {
+  resolve: (value: T) => void;
   reject: (reason?: any) => void;
 }
 
@@ -268,21 +268,21 @@ declare const SharedSlot: ComponentOptions
 /**
  * Promise 组件实例构造器
  */
-declare class PromiseComponent<Props extends PromiseResolvers<any>> {
+declare class PromiseComponent<T extends PromiseResolvers<any>, P = Omit<T, keyof PromiseResolvers<any>>, R = Parameters<T['resolve']>[0]> {
 
-  constructor (public Component: Component<Props>);
+  constructor (public Component: Component<T>);
 
   /**
    * Promise 渲染
    * @param props 组件参数
    */
-  render (props?: Omit<Props, keyof PromiseResolvers<any>>): Promise<Parameters<Props['resolve']>[0]>;
+  render (props?: P): Promise<R>;
 
   /**
    * 克隆一个新的 Promise 组件实例
    * 当您想在不同的地方使用相同的现有 Promise 组件时，您需要克隆一个新实例以避免状态污染
    */
-  clone (): PromiseComponent<Props>;
+  clone (): PromiseComponent<T, P, R>;
 
   /**
    * 当前组件的自定义插槽

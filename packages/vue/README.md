@@ -180,7 +180,8 @@ Well, we have happily completed the development of the user list function based 
 
 ### Shared slot
 
-When your page has multiple root components at the same time (Like microservices), and you want the Promise component under each application
+When your page has multiple root components at the same time (Like microservices), and you want the Promise component
+under each application
 to be rendered in its own context, you need to create a separate shared rendering slot.
 
 ```vue
@@ -249,8 +250,8 @@ import { ComponentOptions, Component } from 'vue'
  * @property resolve Promise Operation Success Callback (Resolved)
  * @property reject Promise Operation Failure Callback (Rejected)
  */
-interface PromiseResolvers<Value> {
-  resolve: (value: Value) => void;
+interface PromiseResolvers<T> {
+  resolve: (value: T) => void;
   reject: (reason?: any) => void;
 }
 
@@ -268,21 +269,21 @@ declare const SharedSlot: ComponentOptions
 /**
  * Promise component constructor
  */
-declare class PromiseComponent<Props extends PromiseResolvers<any>> {
+declare class PromiseComponent<T extends PromiseResolvers<any>, P = Omit<T, keyof PromiseResolvers<any>>, R = Parameters<T['resolve']>[0]> {
 
-  constructor (public Component: Component<Props>);
+  constructor (public Component: Component<T>);
 
   /**
    * promise rendering
-   * @param props component parameters
+   * @param props component props
    */
-  render (props?: Omit<Props, keyof PromiseResolvers<any>>): Promise<Parameters<Props['resolve']>[0]>;
+  render (props?: P): Promise<R>;
 
   /**
    * Clone a new Promise component instance
    * When you want to use the same existing Promise component in different places, you need to clone a new instance to avoid state pollution
    */
-  clone (): PromiseComponent<Props>;
+  clone (): PromiseComponent<T, P, R>;
 
   /**
    * Custom slot for Promise component
