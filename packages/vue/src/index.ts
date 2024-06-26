@@ -13,8 +13,8 @@ import {
  * @property resolve Promise Operation Success Callback (Resolved)
  * @property reject Promise Operation Failure Callback (Rejected)
  */
-export interface PromiseResolvers<Value> {
-  resolve: (value: Value) => void,
+export interface PromiseResolvers<T> {
+  resolve: (value: T) => void,
   reject: (reason?: any) => void
 }
 
@@ -111,24 +111,25 @@ export const SharedSlot = createSharedSlot('')
 /**
  * Promise component constructor
  */
-export class PromiseComponent<Props extends PromiseResolvers<any>> {
+export class PromiseComponent<T extends PromiseResolvers<any>, P = Omit<T, keyof (PromiseResolvers<any> & ComponentPublicInstance)>, R = Parameters<T['resolve']>[0]> {
   private _slot: ComponentOptions | null = null
   private _dispatch: Dispatch | null = null
 
-  constructor (public Component: Component<Props>) {}
+  constructor (public Component: Component<T>) {}
 
   /**
    * promise rendering
-   * @param props component parameters
+   * @param props component props
    */
-  render (props?: Omit<Props, keyof PromiseResolvers<any> | keyof ComponentPublicInstance>) {
+  render (...props: {} extends P ? [P?] : [P]): Promise<R>
+  render (props?: P) {
     let component: VNode
 
     // If the current instance does not have a `_dispatch` method,
     // it means that no custom slot is used, and the component will be rendered to the public slot
     const dispatch = this._dispatch || SHARED.dispatch
 
-    const promise = new Promise<Parameters<Props['resolve']>[0]>((resolve, reject) => {
+    const promise = new Promise<R>((resolve, reject) => {
       // Create a component instance
       component = h(this.Component, {
         ...<any>props,
@@ -156,7 +157,7 @@ export class PromiseComponent<Props extends PromiseResolvers<any>> {
    * When you want to use the same existing Promise component in different places, you need to clone a new instance to avoid state pollution
    */
   clone () {
-    return new PromiseComponent<Props>(this.Component)
+    return new PromiseComponent<T, P, R>(this.Component)
   }
 
   /**
