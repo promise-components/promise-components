@@ -13,6 +13,7 @@
   ],
   "author": "shixianqin",
   "license": "ISC",
+  "private": true,
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
     "@testing-library/dom": "^10.1.0",
