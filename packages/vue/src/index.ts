@@ -90,23 +90,11 @@ function createSlot (name: string, setDispatch: (dispatch: Dispatch | null) => v
 }
 
 /**
- * Create a custom public slot component
- * @param appId
- */
-export function createSharedSlot (appId: string) {
-  if (appId) {
-    SHARED = createShared(appId)
-  }
-
-  return createSlot('SharedSlot', (dispatch) => {
-    SHARED.dispatch = dispatch || (() => {})
-  })
-}
-
-/**
  * Public slot of Promise components
  */
-export const SharedSlot = createSharedSlot('')
+export const SharedSlot = createSlot('SharedSlot', (dispatch) => {
+  SHARED.dispatch = dispatch || (() => {})
+})
 
 /**
  * Promise component constructor

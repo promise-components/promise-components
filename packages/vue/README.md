@@ -178,48 +178,6 @@ Well, we have happily completed the development of the user list function based 
 
 ## Custom Render Slots
 
-### Shared slot
-
-When your page has multiple root components at the same time (Like microservices), and you want the Promise component
-under each application
-to be rendered in its own context, you need to create a separate shared rendering slot.
-
-```vue
-<!-- project-1/App.vue -->
-
-<script setup lang="ts">
-  import { createSharedSlot } from '@promise-components/vue'
-
-  const SharedSlot = createSharedSlot('MyApp_1')
-</script>
-
-<template>
-  <div>
-    ...
-
-    <SharedSlot/>
-  </div>
-</template>
-```
-
-```vue
-<!-- project-2/App.vue -->
-
-<script setup lang="ts">
-  import { createSharedSlot } from '@promise-components/vue'
-
-  const SharedSlot = createSharedSlot('MyApp_2')
-</script>
-
-<template>
-  <div>
-    ...
-
-    <SharedSlot/>
-  </div>
-</template>
-```
-
 ### Component slot
 
 If you want to render a Promise component in a specific location, you can use the custom slot of the Promise component.
@@ -256,12 +214,6 @@ interface PromiseResolvers<T> {
 }
 
 /**
- * Create a custom public slot component
- * @param appId
- */
-declare function createSharedSlot (appId: string): ComponentOptions;
-
-/**
  * Public slot of Promise components
  */
 declare const SharedSlot: ComponentOptions
@@ -289,6 +241,5 @@ export {
   PromiseComponent,
   type PromiseResolvers,
   SharedSlot,
-  createSharedSlot
 }
 ```

@@ -172,50 +172,6 @@ export function UserList () {
 
 ## 自定义渲染插槽
 
-### 共享插槽
-
-当你的页面同时存在多个根组件（比如微服务），并且希望每个应用下的 Promise 组件渲染在自己的上下文中，那么你就需要创建一个独立的共享渲染插槽。
-
-```tsx
-// project-1/App.tsx
-
-import { createSharedSlot } from '@promise-components/react'
-
-const SharedSlot = createSharedSlot('MyApp_1')
-
-function App () {
-  return (
-    <div>
-      ...
-
-      <SharedSlot/>
-    </div>
-  )
-}
-
-export default App
-```
-
-```tsx
-// project-2/App.tsx
-
-import { createSharedSlot } from '@promise-components/react'
-
-const SharedSlot = createSharedSlot('MyApp_2')
-
-function App () {
-  return (
-    <div>
-      ...
-
-      <SharedSlot/>
-    </div>
-  )
-}
-
-export default App
-```
-
 ### 组件插槽
 
 如果希望将某个 Promise 组件渲染在特定的位置，这时候可以使用 Promise 组件的自定义插槽
@@ -252,13 +208,6 @@ interface PromiseResolvers<T> {
 }
 
 /**
- * 创建自定义共享插槽的方法
- * 当你的页面同时存在多个根组件，并且希望每个应用下的 Promise 组件渲染在自己的上下文中，那么你就需要使用这个方法创建一个独立的共享渲染插槽
- * @param appId
- */
-declare function createSharedSlot (appId: string): FunctionComponent<{}>;
-
-/**
  * Promise 组件的共享渲染插槽
  * 它需要在根组件上使用，是为了能够继承应用的上下文，并且给 Promise 组件提供一个默认渲染位置
  */
@@ -287,7 +236,6 @@ export {
   PromiseComponent,
   type PromiseResolvers,
   SharedSlot,
-  createSharedSlot
 }
 
 ```
