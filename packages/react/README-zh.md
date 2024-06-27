@@ -278,12 +278,6 @@ declare class PromiseComponent<T extends PromiseResolvers<any>, P = Omit<T, keyo
   render (props?: P): Promise<R>;
 
   /**
-   * 克隆一个新的 Promise 组件实例
-   * 当您想在不同的地方使用相同的现有 Promise 组件时，您需要克隆一个新实例以避免状态污染
-   */
-  clone (): PromiseComponent<T, P, R>;
-
-  /**
    * 当前组件的自定义插槽
    */
   Slot: FunctionComponent

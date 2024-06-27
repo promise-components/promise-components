@@ -153,14 +153,6 @@ export class PromiseComponent<T extends PromiseResolvers<any>, P = Omit<T, keyof
   }
 
   /**
-   * Clone a new Promise component instance
-   * When you want to use the same existing Promise component in different places, you need to clone a new instance to avoid state pollution
-   */
-  clone () {
-    return new PromiseComponent<T, P, R>(this.Component)
-  }
-
-  /**
    * Custom slot for Promise component
    */
   get Slot (): ComponentOptions {

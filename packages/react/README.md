@@ -284,12 +284,6 @@ declare class PromiseComponent<T extends PromiseResolvers<any>, P = Omit<T, keyo
   render (props?: P): Promise<R>;
 
   /**
-   * Clone a new Promise component instance
-   * When you want to use the same existing Promise component in different places, you need to clone a new instance to avoid state pollution
-   */
-  clone (): PromiseComponent<T, P, R>;
-
-  /**
    * Custom slot for Promise component
    */
   Slot: FunctionComponent
