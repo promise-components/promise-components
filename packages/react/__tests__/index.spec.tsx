@@ -3,14 +3,21 @@
 import { describe, test, expect, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 import { SharedSlot, PromiseComponent, PromiseResolvers } from '@promise-components/react'
 
+const TestContext = createContext('dark')
+
 function App () {
+  const [theme, setTheme] = useState('dark')
+
   return (
     <div>
-      <Home/>
-      <SharedSlot/>
+      <TestContext.Provider value={theme}>
+        <button onClick={() => setTheme('light')}>ChangeTheme</button>
+        <Home/>
+        <SharedSlot/>
+      </TestContext.Provider>
     </div>
   )
 }
@@ -31,9 +38,11 @@ function Home () {
 }
 
 const TestComponent = new PromiseComponent((props: PromiseResolvers<any>) => {
+  const theme = useContext(TestContext)
   return (
     <div>
       <span>Test text</span>
+      <span>Theme: {theme}</span>
       <button onClick={() => props.resolve('Resolved!')}>Resolve</button>
       <button onClick={() => props.reject('Rejected!')}>Reject</button>
     </div>
@@ -92,5 +101,27 @@ describe('@promise-components/react', () => {
       await userEvent.click(resolveBtn)
     }
     expect(screen.queryAllByText('Test text').length).toBe(0)
+  })
+
+  test('Uses contexts', async () => {
+    render(<App/>)
+
+    expect(screen.queryByText('Theme: dark')).toBeNull()
+
+    await userEvent.click(screen.getByText('Open'))
+    expect(screen.queryByText('Theme: dark')).not.toBeNull()
+
+    await userEvent.click(screen.getByText('Resolve'))
+    expect(screen.queryByText('Theme: dark')).toBeNull()
+
+    await userEvent.click(screen.getByText('ChangeTheme'))
+
+    expect(screen.queryByText('Theme: light')).toBeNull()
+
+    await userEvent.click(screen.getByText('Open'))
+    expect(screen.queryByText('Theme: light')).not.toBeNull()
+
+    await userEvent.click(screen.getByText('Resolve'))
+    expect(screen.queryByText('Theme: light')).toBeNull()
   })
 })

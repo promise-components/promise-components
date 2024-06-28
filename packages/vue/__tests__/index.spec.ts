@@ -3,12 +3,21 @@
 import { describe, test, expect, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import { userEvent } from '@testing-library/user-event'
-import { h, ref } from 'vue'
+import { h, ref, provide, inject, Ref } from 'vue'
 import { SharedSlot, PromiseComponent, PromiseResolvers } from '@promise-components/vue'
 
 const App = {
   setup: () => {
+    const theme = ref('dark')
+
+    provide('theme', theme)
+
     return () => h('div', [
+      h('button', {
+        onClick: () => {
+          theme.value = 'light'
+        }
+      }, 'ChangeTheme'),
       h(Home),
       h(SharedSlot)
     ])
@@ -42,8 +51,11 @@ const TestComponent = new PromiseComponent<PromiseResolvers<any>>({
     reject: Function,
   },
   setup: (props) => {
+    const theme = inject<Ref<string>>('theme')
+
     return () => h('div', [
       h('span', 'Test text'),
+      h('span', `Theme: ${theme?.value}`),
       h('button', {
         onClick: () => {
           props.resolve('Resolved!')
@@ -110,5 +122,27 @@ describe('@promise-components/vue', () => {
       await userEvent.click(resolveBtn)
     }
     expect(screen.queryAllByText('Test text').length).toBe(0)
+  })
+
+  test('Uses contexts', async () => {
+    render(App)
+
+    expect(screen.queryByText('Theme: dark')).toBeNull()
+
+    await userEvent.click(screen.getByText('Open'))
+    expect(screen.queryByText('Theme: dark')).not.toBeNull()
+
+    await userEvent.click(screen.getByText('Resolve'))
+    expect(screen.queryByText('Theme: dark')).toBeNull()
+
+    await userEvent.click(screen.getByText('ChangeTheme'))
+
+    expect(screen.queryByText('Theme: light')).toBeNull()
+
+    await userEvent.click(screen.getByText('Open'))
+    expect(screen.queryByText('Theme: light')).not.toBeNull()
+
+    await userEvent.click(screen.getByText('Resolve'))
+    expect(screen.queryByText('Theme: light')).toBeNull()
   })
 })
