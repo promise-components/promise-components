@@ -6,18 +6,18 @@ import { userEvent } from '@testing-library/user-event'
 import { createContext, useContext, useState } from 'react'
 import { SharedSlot, PromiseComponent, PromiseResolvers } from '@promise-components/react'
 
-const TestContext = createContext('dark')
+const ThemeContext = createContext('')
 
 function App () {
   const [theme, setTheme] = useState('dark')
 
   return (
     <div>
-      <TestContext.Provider value={theme}>
+      <ThemeContext.Provider value={theme}>
         <button onClick={() => setTheme('light')}>ChangeTheme</button>
         <Home/>
         <SharedSlot/>
-      </TestContext.Provider>
+      </ThemeContext.Provider>
     </div>
   )
 }
@@ -38,7 +38,7 @@ function Home () {
 }
 
 const TestComponent = new PromiseComponent((props: PromiseResolvers<any>) => {
-  const theme = useContext(TestContext)
+  const theme = useContext(ThemeContext)
   return (
     <div>
       <span>Test text</span>
@@ -96,14 +96,12 @@ describe('@promise-components/react', () => {
     await userEvent.click(screen.getByText('Open'))
     expect(screen.queryAllByText('Test text').length).toBe(3)
 
-    const resolveButtons = screen.getAllByText('Resolve')
-    for (const resolveBtn of resolveButtons) {
-      await userEvent.click(resolveBtn)
-    }
+    await Promise.all(screen.getAllByText('Resolve').map((btn) => userEvent.click(btn)))
     expect(screen.queryAllByText('Test text').length).toBe(0)
+    expect(screen.queryAllByText('Result: Resolved!').length).toBe(1)
   })
 
-  test('Uses contexts', async () => {
+  test('uses contexts', async () => {
     render(<App/>)
 
     expect(screen.queryByText('Theme: dark')).toBeNull()

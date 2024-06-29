@@ -117,11 +117,9 @@ describe('@promise-components/vue', () => {
     await userEvent.click(screen.getByText('Open'))
     expect(screen.queryAllByText('Test text').length).toBe(3)
 
-    const resolveButtons = screen.getAllByText('Resolve')
-    for (const resolveBtn of resolveButtons) {
-      await userEvent.click(resolveBtn)
-    }
+    await Promise.all(screen.getAllByText('Resolve').map((btn) => userEvent.click(btn)))
     expect(screen.queryAllByText('Test text').length).toBe(0)
+    expect(screen.queryAllByText('Result: Resolved!').length).toBe(1)
   })
 
   test('Uses contexts', async () => {
