@@ -36,7 +36,7 @@ const IN_BROWSER = typeof window !== 'undefined'
 /**
  * Shared Object
  */
-let SHARED = createShared()
+const SHARED = createShared()
 
 /**
  * Create a shared object
@@ -44,9 +44,9 @@ let SHARED = createShared()
  */
 function createShared (appId?: string): Shared {
   const key = '__PROMISE_COMPONENTS_SHARED_REACT__' + (appId || '')
-  const root: any = IN_BROWSER ? window : {}
+  const root: Record<string, Shared> = IN_BROWSER ? window as any : {}
 
-  return root[key] || (root[key] = <Shared>{
+  return root[key] || (root[key] = {
     count: 0,
     dispatch: () => {}
   })
