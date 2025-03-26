@@ -81,14 +81,14 @@ interface UserItem {
 }
 
 /**
- * 🔴 The Props parameter must inherit from PromiseResolvers
+ * 📌 The Props parameter must inherit from PromiseResolvers
  */
 interface Props extends PromiseResolvers<UserItem> {
   user?: UserItem
 }
 
 /**
- * 🔴 Create a PromiseComponent instance
+ * 📌 Create a PromiseComponent instance
  */
 export const AddUser = new PromiseComponent((props: Props) => {
   const [formData, setFormData] = useState(() => {
@@ -104,12 +104,12 @@ export const AddUser = new PromiseComponent((props: Props) => {
     if (!formData.name) return alert('Please enter `Name`')
     if (!formData.age) return alert('Please enter `Age`')
 
-    // 🔴 Call resolve callback
+    // 📌 Call resolve callback
     props.resolve(formData)
   }
 
   function handleCancel () {
-    // 🔴 Call reject callback
+    // 📌 Call reject callback
     props.reject()
   }
 
@@ -164,7 +164,7 @@ export function UserList () {
 
   async function handleAdd () {
     /**
-     * 🔴 Using component
+     * 📌 Using component
      */
     const newUser = await AddUser.render()
 
@@ -173,7 +173,7 @@ export function UserList () {
 
   async function handleEdit (editIndex: number) {
     /**
-     * 🔴 Using component and providing parameters (Edit mode)
+     * 📌 Using component and providing parameters (Edit mode)
      */
     const modifiedUser = await AddUser.render({
       user: userList[editIndex],

@@ -19,7 +19,7 @@ npm i @promise-components/vue
 您需要在根组件中使用 Promise 组件的共享渲染插槽，它将为整个应用的 Promise
 组件提供一个默认的渲染位置，和应用上下文的继承（比如：store、theme、i18n...）。
 
-```vue
+```html
 <!-- App.vue -->
 
 <script setup lang="ts">
@@ -37,7 +37,7 @@ npm i @promise-components/vue
 
 ### 定义 Promise 组件
 
-```vue
+```html
 <!-- add-user.vue -->
 
 <script setup lang="ts">
@@ -51,7 +51,7 @@ npm i @promise-components/vue
   }
 
   /**
-   * 🔴 Props 参数必须继承自 PromiseResolvers
+   * 📌 Props 参数必须继承自 PromiseResolvers
    */
   interface Props extends PromiseResolvers<UserItem> {
     user?: UserItem
@@ -70,12 +70,12 @@ npm i @promise-components/vue
     if (!formData.name) return alert('Please enter `Name`')
     if (!formData.age) return alert('Please enter `Age`')
 
-    // 🔴 调用成功回调
+    // 📌 调用成功回调
     props.resolve(formData)
   }
 
   function handleCancel () {
-    // 🔴 调用失败回调
+    // 📌 调用失败回调
     props.reject()
   }
 </script>
@@ -121,7 +121,7 @@ export const AddUser = new PromiseComponent(Component)
 
 ### 使用 Promise 组件
 
-```vue
+```html
 <!-- user-list.vue -->
 
 <script setup lang="ts">
@@ -138,7 +138,7 @@ export const AddUser = new PromiseComponent(Component)
 
   async function handleAdd () {
     /**
-     * 🔴 使用组件
+     * 📌 使用组件
      */
     const newUser = await AddUser.render()
 
@@ -149,7 +149,7 @@ export const AddUser = new PromiseComponent(Component)
     const target = userList.value[editIndex]
 
     /**
-     * 🔴 使用组件并传入参数（编辑模式）
+     * 📌 使用组件并传入参数（编辑模式）
      */
     const modifiedUser = await AddUser.render({
       user: target,
@@ -181,7 +181,7 @@ export const AddUser = new PromiseComponent(Component)
 
 如果希望将某个 Promise 组件渲染在特定的位置，这时候可以使用 Promise 组件的自定义插槽
 
-```vue
+```html
 <!-- user-list.vue -->
 
 <script setup lang="ts">

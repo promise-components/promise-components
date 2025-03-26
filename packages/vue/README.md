@@ -20,7 +20,7 @@ You need to use the shared rendering slot of the Promise component in the root c
 rendering location for the Promise components of the entire application and inheritance of the application context (such
 as: store, theme, i18n...).
 
-```vue
+```html
 <!-- App.vue -->
 
 <script setup lang="ts">
@@ -38,7 +38,7 @@ as: store, theme, i18n...).
 
 ### Defining a Promise Component
 
-```vue
+```html
 <!-- add-user.vue -->
 
 <script setup lang="ts">
@@ -52,7 +52,7 @@ as: store, theme, i18n...).
   }
 
   /**
-   * 🔴 The Props parameter must inherit from PromiseResolvers
+   * 📌 The Props parameter must inherit from PromiseResolvers
    */
   interface Props extends PromiseResolvers<UserItem> {
     user?: UserItem
@@ -71,12 +71,12 @@ as: store, theme, i18n...).
     if (!formData.name) return alert('Please enter `Name`')
     if (!formData.age) return alert('Please enter `Age`')
 
-    // 🔴 Call resolve callback
+    // 📌 Call resolve callback
     props.resolve(formData)
   }
 
   function handleCancel () {
-    // 🔴 Call reject callback
+    // 📌 Call reject callback
     props.reject()
   }
 </script>
@@ -122,7 +122,7 @@ File name suggestions:
 
 ### Using the Promise component
 
-```vue
+```html
 <!-- user-list.vue -->
 
 <script setup lang="ts">
@@ -139,7 +139,7 @@ File name suggestions:
 
   async function handleAdd () {
     /**
-     * 🔴 Using component
+     * 📌 Using component
      */
     const newUser = await AddUser.render()
 
@@ -150,7 +150,7 @@ File name suggestions:
     const target = userList.value[editIndex]
 
     /**
-     * 🔴 Using component and providing parameters (Edit mode)
+     * 📌 Using component and providing parameters (Edit mode)
      */
     const modifiedUser = await AddUser.render({
       user: target,
@@ -182,7 +182,7 @@ Well, we have happily completed the development of the user list function based 
 
 If you want to render a Promise component in a specific location, you can use the custom slot of the Promise component.
 
-```vue
+```html
 <!-- user-list.vue -->
 
 <script setup lang="ts">

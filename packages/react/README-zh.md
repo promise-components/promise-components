@@ -52,14 +52,14 @@ export interface UserItem {
 }
 
 /**
- * 🔴 Props 参数必须继承自 PromiseResolvers
+ * 📌 Props 参数必须继承自 PromiseResolvers
  */
 interface Props extends PromiseResolvers<UserItem> {
   user?: UserItem
 }
 
 /**
- * 🔴 创建 Promise 组件
+ * 📌 创建 Promise 组件
  */
 export const AddUser = new PromiseComponent((props: Props) => {
   const [formData, setFormData] = useState(() => {
@@ -75,12 +75,12 @@ export const AddUser = new PromiseComponent((props: Props) => {
     if (!formData.name) return alert('Please enter `Name`')
     if (!formData.age) return alert('Please enter `Age`')
 
-    // 🔴 调用成功回调
+    // 📌 调用成功回调
     props.resolve(formData)
   }
 
   function handleCancel () {
-    // 🔴 调用失败回调
+    // 📌 调用失败回调
     props.reject()
   }
 
@@ -129,7 +129,7 @@ export function UserList () {
 
   async function handleAdd () {
     /**
-     * 🔴 使用组件
+     * 📌 使用组件
      */
     const newUser = await AddUser.render()
 
@@ -138,7 +138,7 @@ export function UserList () {
 
   async function handleEdit (editIndex: number) {
     /**
-     * 🔴 使用组件并传入参数（编辑模式）
+     * 📌 使用组件并传入参数（编辑模式）
      */
     const modifiedUser = await AddUser.render({
       user: userList[editIndex],
